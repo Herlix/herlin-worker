@@ -3,30 +3,47 @@ use url::Url;
 use wasm_bindgen::__rt::std::collections::HashMap;
 
 #[derive(Deserialize, Serialize, Debug, PartialEq)]
+/// Request struct
 pub struct Request {
+    /// Body of the request
     pub body: String,
+    /// Method used, GET, PUT, POST, DELETE etc
     pub method: String,
+    /// Headers of the request
     pub headers: HashMap<String, String>,
-
     #[serde(deserialize_with = "url_deserialize")]
     #[serde(serialize_with = "url_serialize")]
+    /// Request destination URL
     pub url: Url,
 }
 
 impl Request {
+    /// Insert headers into the request
+    ///
+    /// Overwrites old value of given key if it already exists
     pub fn add_header(&mut self, key: &str, value: &str) {
+        if self.headers.contains_key(key) {
+            self.headers.remove(key);
+        }
         self.headers.insert(key.to_string(), value.to_string());
     }
 }
 
 #[derive(Serialize, Debug)]
+/// Response struct
 pub struct Response {
+    /// HttpStatusCode
     pub status: u16,
+    /// Headers of the response
     pub headers: HashMap<String, String>,
+    /// Body of the response
     pub body: String,
 }
 
 impl Response {
+    /// Insert headers into the request
+    ///
+    /// Overwrites old value of given key if it already exists
     pub fn add_header(&mut self, key: &str, value: &str) {
         self.headers.insert(key.to_string(), value.to_string());
     }
@@ -51,9 +68,10 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::models::{Request, Response};
     use serde_json::from_str;
     use url::Url;
+
+    use crate::models::{Request, Response};
 
     #[test]
     fn request_serialize_ok() {

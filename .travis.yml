@@ -5,7 +5,6 @@ cache: cargo
 
 matrix:
   include:
-
   # Builds with wasm-pack.
   - rust: stable
     env: RUST_BACKTRACE=1
@@ -14,7 +13,6 @@ matrix:
       chrome: stable
     before_script:
       - (test -x $HOME/.cargo/bin/cargo-install-update || cargo install cargo-update)
-      - (test -x $HOME/.cargo/bin/cargo-generate || cargo install --vers "^0.2" cargo-generate)
       - cargo install-update -a
       - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
       - cargo install wrangler

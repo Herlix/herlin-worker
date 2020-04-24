@@ -42,7 +42,6 @@ pub struct Response {
 
 impl Response {
     /// Insert headers into the request
-    ///
     /// Overwrites old value of given key if it already exists
     pub fn add_header(&mut self, key: &str, value: &str) {
         self.headers.insert(key.to_string(), value.to_string());

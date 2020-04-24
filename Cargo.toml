@@ -5,6 +5,7 @@ authors = ["Alexander Herlin <alexander.herlin@outlook.com>"]
 edition = "2018"
 description = "Api worker for personal website"
 repository = "https://github.com/Herlix/herlin-worker"
+homepage = "https://github.com/Herlix/herlin-worker"
 license = "MIT/Apache-2.0"
 readme = "README.md"
 keywords = ["web", "rest", "wasm", "rust"]
@@ -15,6 +16,9 @@ crate-type = ["cdylib", "rlib"]
 
 [features]
 default = ["console_error_panic_hook"]
+
+[build]
+target = "wasm32-unknown-unknown"
 
 [dependencies]
 cfg-if = "0.1.10"

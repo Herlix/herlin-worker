@@ -1,6 +1,3 @@
 name = "herlin-worker-dev"
 type = "rust"
-account_id = ""
 workers_dev = true
-route = ""
-zone_id = ""

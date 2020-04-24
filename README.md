@@ -1,4 +1,4 @@
-# 👷‍♀️🦀🕸️ herlin-worker
+# 👷‍♀️🦀🕸️ herlin-worker [![Build Status](https://travis-ci.com/Herlix/herlin-worker.svg?branch=master)](https://travis-ci.com/Herlix/herlin-worker)
 
 ## 🔋 Batteries Included
 

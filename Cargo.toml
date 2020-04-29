@@ -24,9 +24,10 @@ target = "wasm32-unknown-unknown"
 cfg-if = "0.1.10"
 wasm-bindgen = { version = "0.2", features=["serde-serialize"] }
 wasm-bindgen-futures = "0.4.10"
-serde_json = "1.0.51"
+serde_json = "1.0.52"
 serde = { version="1.0.106", features = ["derive"] }
 url = "2.1.1"
+js-sys = "0.3.37"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires

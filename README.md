@@ -13,7 +13,7 @@
 
 ### 🛠️ Build & Test with `wasm-pack`
 ```
-wasm-pack build && wasm-pack test --node
+wasm-pack test --node
 ```
 
 ### 🔧 Preview with `wrangler preview`

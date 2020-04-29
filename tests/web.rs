@@ -1,17 +1,15 @@
 //! Test suite for the Web and headless browsers.
 
 #![cfg(target_arch = "wasm32")]
+// wasm_bindgen_test_configure!(run_in_browser);
 
+use herlin_worker::get_response;
+use herlin_worker::request::{Request, Response};
 use url::Url;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::__rt::std::collections::HashMap;
 use wasm_bindgen_futures::{future_to_promise, JsFuture};
 use wasm_bindgen_test::*;
-
-use herlin_worker::get_response;
-use herlin_worker::models::{Request, Response};
-
-// wasm_bindgen_test_configure!(run_in_browser);
 
 #[cfg(test)]
 pub fn input_request() -> JsValue {

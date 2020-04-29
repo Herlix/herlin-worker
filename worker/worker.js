@@ -21,7 +21,7 @@ async function handleRequest(request) {
     for (let key of request.headers.keys()) {
         headers[key] = request.headers.get(key);
     }
-
+    
     const response = await get_response({
         method: request.method,
         headers: headers,

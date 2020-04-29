@@ -19,7 +19,6 @@ pub struct Request {
 
 impl Request {
     /// Insert headers into the request
-    ///
     /// Overwrites old value of given key if it already exists
     pub fn add_header(&mut self, key: &str, value: &str) {
         if self.headers.contains_key(key) {
@@ -29,7 +28,7 @@ impl Request {
     }
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 /// Response struct
 pub struct Response {
     /// HttpStatusCode
@@ -70,7 +69,7 @@ mod tests {
     use serde_json::from_str;
     use url::Url;
 
-    use crate::models::{Request, Response};
+    use crate::request::{Request, Response};
 
     #[test]
     fn request_serialize_ok() {

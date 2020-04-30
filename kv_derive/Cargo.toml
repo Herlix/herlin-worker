@@ -1,0 +1,11 @@
+[package]
+name = "kv_derive"
+version = "0.1.0"
+authors = ["Alexander Herlin <alexander.herlin@outlook.com>"]
+edition = "2018"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = "1.0.18"

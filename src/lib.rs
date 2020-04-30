@@ -1,10 +1,10 @@
-mod kv;
+mod documents;
 #[warn(missing_debug_implementations, rust_2018_idioms, missing_docs)]
 /// Request & Response models
 pub mod request;
 mod utils;
 
-use crate::kv::user_score::UserScore;
+use crate::documents::{UserInfo, UserScore};
 use request::{Request, Response};
 use wasm_bindgen::__rt::std::collections::HashMap;
 use wasm_bindgen::__rt::std::error::Error;
@@ -34,6 +34,15 @@ async fn respond(req: Request) -> Result<Response, Box<dyn Error>> {
         .query_pairs()
         .map(|x| (x.0.to_lowercase(), x.1.to_lowercase()))
         .collect();
+
+    UserInfo::put(
+        "1",
+        UserInfo {
+            email: "alexander.herlin@outlook.com".to_string(),
+            name: "Alexander".to_string(),
+        },
+    )
+    .await?;
 
     let del = UserScore::delete("1").await?;
     let put = UserScore::put(

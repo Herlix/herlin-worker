@@ -3,5 +3,6 @@ type = "rust"
 workers_dev = true
 
 kv-namespaces = [
-    { binding = "UserScore", id = "c5af7c8220064566aced328c54cdb6cd" }
+    { binding = "UserScore", id = "c5af7c8220064566aced328c54cdb6cd" },
+    { binding = "UserInfo", id = "3b3d8008ad3948818bbefad39854818e" },
 ]

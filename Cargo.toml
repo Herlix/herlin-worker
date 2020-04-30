@@ -29,6 +29,7 @@ serde = { version="1.0.106", features = ["derive"] }
 url = "2.1.1"
 js-sys = "0.3.37"
 
+kv_derive = { path = "./kv_derive" }
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
 # all the `std::fmt` and `std::panicking` infrastructure, so isn't great for

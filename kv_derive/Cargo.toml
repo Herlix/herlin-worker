@@ -8,4 +8,4 @@ edition = "2018"
 proc-macro = true
 
 [dependencies]
-syn = "1.0.18"
+syn = "1.0"

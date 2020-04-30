@@ -1,5 +1,5 @@
-mod documents;
 #[warn(missing_debug_implementations, rust_2018_idioms, missing_docs)]
+mod documents;
 /// Request & Response models
 pub mod request;
 mod utils;
@@ -13,7 +13,7 @@ use wasm_bindgen::JsValue;
 
 #[wasm_bindgen]
 pub async fn get_response(request: JsValue) -> Result<JsValue, JsValue> {
-    let req = request
+    let req: Request = request
         .into_serde()
         .map_err(|e| JsValue::from_str(e.to_string().as_str()))?;
     let res = respond(req)
@@ -32,7 +32,7 @@ async fn respond(req: Request) -> Result<Response, Box<dyn Error>> {
     let params: HashMap<String, String> = req
         .url
         .query_pairs()
-        .map(|x| (x.0.to_lowercase(), x.1.to_lowercase()))
+        .map(|x| (x.0.to_string(), x.1.to_string()))
         .collect();
 
     UserInfo::put(
@@ -68,4 +68,14 @@ async fn respond(req: Request) -> Result<Response, Box<dyn Error>> {
         ),
         headers: req.headers,
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    pub fn stub() {
+        assert_eq!(1, 1);
+    }
 }

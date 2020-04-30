@@ -1,17 +1,17 @@
 use proc_macro::TokenStream;
 use syn;
 
-#[proc_macro_derive(Documentize)]
+#[proc_macro_derive(CloudFlareKV)]
 pub fn documentize_derive(input: TokenStream) -> TokenStream {
     // Construct a representation of Rust code as a syntax tree
     // that we can manipulate
     let ast = syn::parse(input).unwrap();
 
     // Build the trait implementation
-    impl_documentize_macro(&ast)
+    impl_cloudflare_kv(&ast)
 }
 
-fn impl_documentize_macro(ast: &syn::DeriveInput) -> TokenStream {
+fn impl_cloudflare_kv(ast: &syn::DeriveInput) -> TokenStream {
     r#"
        impl #name {
             pub async fn get(key: &str) -> wasm_bindgen::__rt::std::result::Result<Self, wasm_bindgen::__rt::std::io::Error> {
@@ -26,8 +26,8 @@ fn impl_documentize_macro(ast: &syn::DeriveInput) -> TokenStream {
                     Self::get(key).await
                 } else {
                     Err(wasm_bindgen::__rt::std::io::Error::new(
-                        wasm_bindgen::__rt::std::io::ErrorKind::InvalidInput,
-                        format!("Could not find item with id {}", key),
+                        wasm_bindgen::__rt::std::io::ErrorKind::NotFound,
+                        format!("Could not find #name with id {}", key),
                     ))
                 }
             }
@@ -42,9 +42,8 @@ fn impl_documentize_macro(ast: &syn::DeriveInput) -> TokenStream {
             async fn call_js(promise: js_sys::Promise) -> wasm_bindgen::__rt::std::result::Result<wasm_bindgen::JsValue, wasm_bindgen::__rt::std::io::Error> {
                 let result = wasm_bindgen_futures::JsFuture::from(promise).await.map_err(|e| {
                     wasm_bindgen::__rt::std::io::Error::new(
-                        wasm_bindgen::__rt::std::io::ErrorKind::InvalidInput,
-                        e.as_string()
-                            .unwrap_or("Fatal error while accessing JS".to_string()),
+                        wasm_bindgen::__rt::std::io::ErrorKind::Other,
+                        e.as_string().unwrap(),
                     )
                 })?;
                 Ok(result)

@@ -11,9 +11,9 @@
 
 ## 🚴 Usage
 
-### 🛠️ Build & Test with `wasm-pack`
+### 🛠️ Build `wasm-pack`
 ```
-wasm-pack test --node
+wasm-pack build
 ```
 
 ### 🔧 Preview with `wrangler preview`
@@ -21,9 +21,9 @@ wasm-pack test --node
 wrangler preview --watch
 ```
 
-### 🔬 Test in Headless Browsers with `wasm-pack test`
+### 🔬 Test using node `wasm-pack test`
 ```
-wasm-pack test --headless --firefox
+wasm-pack test --node
 ```
 
 ### ✅ Deployment

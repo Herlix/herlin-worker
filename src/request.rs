@@ -100,12 +100,10 @@ where
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use rstest::*;
     use serde_json::from_str;
     use url::Url;
-
-    use test_case::test_case;
-
-    use super::*;
 
     #[test]
     fn request_serialize_ok() {
@@ -158,21 +156,28 @@ mod tests {
         );
     }
 
-    #[test_case(& Method::GET => "\"GET\""; "Should be String GET")]
-    #[test_case(& Method::DELETE => "\"DELETE\""; "Should be String DELETE")]
-    #[test_case(& Method::PUT => "\"PUT\""; "Should be String PUT")]
-    #[test_case(& Method::PATCH => "\"PATCH\""; "Should be String PATCH")]
-    #[test_case(& Method::POST => "\"POST\""; "Should be String POST")]
-    fn serialize_enum_ok(m: &Method) -> String {
-        serde_json::to_string(m).unwrap()
+    #[rstest(input, expected,
+        case(&Method::GET, "\"GET\""),
+        case(&Method::DELETE, "\"DELETE\""),
+        case(&Method::PUT, "\"PUT\""),
+        case(&Method::PATCH, "\"PATCH\""),
+        case(&Method::POST, "\"POST\""),
+    )]
+    fn serialize_enum_ok(input: &Method, expected: &str) {
+        assert_eq!(serde_json::to_string(input).unwrap(), expected);
     }
 
-    #[test_case("\"GeT\"" => Method::GET; "Should be Method::GET")]
-    #[test_case("\"DELETE\"" => Method::DELETE; "Should be Method::DELETE")]
-    #[test_case("\"Put\"" => Method::PUT; "Should be Method::PUT")]
-    #[test_case("\"patcH\"" => Method::PATCH; "Should be Method::PATCH")]
-    #[test_case("\"POst\"" => Method::POST; "Should be Method::POST")]
-    fn deserialize_enum_ok(s: &str) -> Method {
-        serde_json::from_str(s).unwrap()
+    #[rstest(
+        input,
+        expected,
+        case("\"GeT\"", Method::GET),
+        case("\"DELETE\"", Method::DELETE),
+        case("\"Put\"", Method::PUT),
+        case("\"patcH\"", Method::PATCH),
+        case("\"POst\"", Method::POST)
+    )]
+    fn deserialize_enum_ok(input: &str, expected: Method) {
+        let res: Method = serde_json::from_str(&input).unwrap();
+        assert_eq!(res, expected);
     }
 }

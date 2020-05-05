@@ -1,8 +1,10 @@
 #[warn(missing_debug_implementations, rust_2018_idioms, missing_docs)]
+
+/// Default Request & Response objects
+pub mod request;
+
 mod documents;
 mod kv;
-/// Request & Response models
-pub mod request;
 mod responder;
 mod utils;
 
@@ -24,14 +26,4 @@ pub async fn get_response(request: JsValue) -> Result<JsValue, JsValue> {
 
     let res = JsValue::from_serde(&res).map_err(|e| JsValue::from_str(e.to_string().as_str()))?;
     Ok(res)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    pub fn stub() {
-        assert_eq!(1, 1);
-    }
 }

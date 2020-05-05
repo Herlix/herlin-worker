@@ -1,8 +1,10 @@
 use proc_macro::TokenStream;
+use quote::quote;
 use syn;
+use syn::Ident;
 
 #[proc_macro_derive(CloudFlareKV)]
-pub fn documentize_derive(input: TokenStream) -> TokenStream {
+pub fn cloudflare_derive(input: TokenStream) -> TokenStream {
     // Construct a representation of Rust code as a syntax tree
     // that we can manipulate
     let ast = syn::parse(input).unwrap();
@@ -12,17 +14,56 @@ pub fn documentize_derive(input: TokenStream) -> TokenStream {
 }
 
 fn impl_cloudflare_kv(ast: &syn::DeriveInput) -> TokenStream {
-    r#"
-       impl #name {
-            pub async fn get(key: &str) -> wasm_bindgen::__rt::std::result::Result<Self, wasm_bindgen::__rt::std::io::Error> {
-                let result = Self::call_js(js_get_#name(key)).await?.as_string().unwrap();
+    let name = &ast.ident;
+    let get = Ident::new(&format!("js_get_{}", &name), ast.ident.span());
+    let put = Ident::new(&format!("js_put_{}", &name), ast.ident.span());
+    let delete = Ident::new(&format!("js_delete_{}", &name), ast.ident.span());
+
+    let res = quote! {
+        impl crate::kv::JsKvPromise for #name {
+            fn js_get(key: &str) -> js_sys::Promise {
+                #get(key)
+            }
+
+            fn js_delete(key: &str) -> js_sys::Promise {
+                #delete(key)
+            }
+
+            fn js_put(key: &str, value: &str) -> js_sys::Promise {
+                #put(key, value)
+            }
+        }
+
+        #[wasm_bindgen::prelude::wasm_bindgen]
+        extern "C" {
+            #[wasm_bindgen::prelude::wasm_bindgen(js_namespace = #name, js_name = get)]
+            fn #get(key: &str) -> js_sys::Promise;
+
+            #[wasm_bindgen::prelude::wasm_bindgen(js_namespace = #name, js_name = put)]
+            fn #put(key: &str, value: &str) -> js_sys::Promise;
+
+            #[wasm_bindgen::prelude::wasm_bindgen(js_namespace = #name, js_name = delete)]
+            fn #delete(key: &str) -> js_sys::Promise;
+        }
+
+       #[async_trait::async_trait(?Send)]
+        impl crate::kv::CloudFlareKV<'_, #name> for #name
+        {
+            async fn get(key: &str) -> Result<#name, wasm_bindgen::__rt::std::io::Error> {
+                let result = crate::kv::call_js(Self::js_get(key))
+                    .await?
+                    .as_string()
+                    .unwrap();
                 let result = serde_json::from_str(result.as_str())?;
                 Ok(result)
             }
 
-            pub async fn put(key: &str, value: Self) -> wasm_bindgen::__rt::std::result::Result<Self, wasm_bindgen::__rt::std::io::Error> {
+            async fn put(
+                key: &str,
+                value: #name,
+            ) -> Result<#name, wasm_bindgen::__rt::std::io::Error> {
                 let value = serde_json::to_string(&value)?;
-                if let Ok(_) = Self::call_js(js_put_#name(key, value.as_str())).await {
+                if let Ok(_) = crate::kv::call_js(Self::js_put(key, value.as_str())).await {
                     Self::get(key).await
                 } else {
                     Err(wasm_bindgen::__rt::std::io::Error::new(
@@ -32,36 +73,14 @@ fn impl_cloudflare_kv(ast: &syn::DeriveInput) -> TokenStream {
                 }
             }
 
-            pub async fn delete(key: &str) -> wasm_bindgen::__rt::std::result::Result<bool, wasm_bindgen::__rt::std::io::Error> {
-                match Self::call_js(js_delete_#name(key)).await {
-                    Ok(_) => Ok(true),
+            async fn delete(key: &str) -> Result<(), wasm_bindgen::__rt::std::io::Error> {
+                match crate::kv::call_js(Self::js_delete(key)).await {
+                    Ok(_) => Ok(()),
                     Err(e) => Err(e),
                 }
             }
-
-            async fn call_js(promise: js_sys::Promise) -> wasm_bindgen::__rt::std::result::Result<wasm_bindgen::JsValue, wasm_bindgen::__rt::std::io::Error> {
-                let result = wasm_bindgen_futures::JsFuture::from(promise).await.map_err(|e| {
-                    wasm_bindgen::__rt::std::io::Error::new(
-                        wasm_bindgen::__rt::std::io::ErrorKind::Other,
-                        e.as_string().unwrap(),
-                    )
-                })?;
-                Ok(result)
-            }
         }
 
-        #[wasm_bindgen::prelude::wasm_bindgen]
-        extern "C" {
-            #[wasm_bindgen::prelude::wasm_bindgen(js_namespace = #name, js_name = get)]
-            fn js_get_#name(key: &str) -> js_sys::Promise;
-
-            #[wasm_bindgen::prelude::wasm_bindgen(js_namespace = #name, js_name = put)]
-            fn js_put_#name(key: &str, value: &str) -> js_sys::Promise;
-
-            #[wasm_bindgen::prelude::wasm_bindgen(js_namespace = #name, js_name = delete)]
-            fn js_delete_#name(key: &str) -> js_sys::Promise;
-        }"#
-    .replace("#name", &ast.ident.to_string().as_str())
-    .parse()
-    .unwrap()
+    };
+    res.into()
 }

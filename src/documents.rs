@@ -1,3 +1,4 @@
+use crate::kv::JsKvPromise;
 use kv_derive::CloudFlareKV;
 use serde::{Deserialize, Serialize};
 

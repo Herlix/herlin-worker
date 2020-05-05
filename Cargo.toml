@@ -28,6 +28,7 @@ serde_json = "1.0.52"
 serde = { version="1.0.106", features = ["derive"] }
 url = "2.1.1"
 js-sys = "0.3.37"
+async-trait = "0.1.30"
 
 kv_derive = { path = "./kv_derive" }
 # The `console_error_panic_hook` crate provides better debugging of panics by

@@ -119,6 +119,7 @@ mod tests {
             .insert("content-type".to_string(), "application/json".to_string());
 
         let res = serde_json::to_string(&req).unwrap();
+
         assert_eq!(res, "{\"body\":\"\",\"method\":\"GET\",\"headers\":{\"content-type\":\"application/json\"},\"url\":\"https://test.se/\"}".to_string());
     }
 

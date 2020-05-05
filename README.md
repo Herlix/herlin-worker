@@ -11,19 +11,25 @@
 
 ## 🚴 Usage
 
-### 🛠️ Build `wasm-pack`
+### 🧗‍ Setup
+````
+Target: 
+    rustup target add wasm32-unknown-unknown
+Wasm helper tool: 
+    https://rustwasm.github.io/wasm-pack/installer/#
+Wrangler, Cloudflare CLI: 
+    https://developers.cloudflare.com/workers/tooling/wrangler/install/
+````
+
+### 🛠️ Build & test
 ```
-wasm-pack build
+/* Build, test non wasm (unit tests), test wasm (integration tests)*/
+cargo build && cargo test && wasm-pack test --node
 ```
 
 ### 🔧 Preview with `wrangler preview`
 ```
 wrangler preview --watch
-```
-
-### 🔬 Test using node `wasm-pack test`
-```
-wasm-pack test --node
 ```
 
 ### ✅ Deployment

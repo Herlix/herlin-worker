@@ -4,6 +4,9 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/cf_kv/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cf_kv_derive/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/herlin_web/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

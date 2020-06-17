@@ -1,14 +1,14 @@
 #[warn(missing_debug_implementations, rust_2018_idioms, missing_docs)]
-
-/// Default Request & Response objects
-pub mod request;
-
-mod documents;
-mod kv;
-mod responder;
+mod models;
 mod utils;
 
-use request::Request;
+use crate::models::UserScore;
+use cf_kv::CloudFlareKV;
+use herlin_web::{
+    body::Body, deserialize_request, request::HttpRequest, response::HttpResponse, App,
+};
+use log::info;
+use log::Level;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsValue;
 
@@ -16,14 +16,33 @@ use wasm_bindgen::JsValue;
 /// Takes the request and produces a response
 #[wasm_bindgen]
 pub async fn get_response(request: JsValue) -> Result<JsValue, JsValue> {
-    let req: Request = request
-        .into_serde()
-        .map_err(|e| JsValue::from_str(e.to_string().as_str()))?;
+    console_log::init_with_level(Level::Debug).expect("Could not init logger");
+    let req = deserialize_request!(&request)?;
 
-    let res = responder::respond(req)
-        .await
-        .map_err(|e| JsValue::from_str(e.to_string().as_str()))?;
+    let mut app = App::new(req);
+    app.reg("userscore", get_user_score);
 
-    let res = JsValue::from_serde(&res).map_err(|e| JsValue::from_str(e.to_string().as_str()))?;
-    Ok(res)
+    let response = app.response().await;
+    Ok(JsValue::from_serde(&response).map_err(|e| JsValue::from(e.to_string()))?)
+}
+
+async fn get_user_score(req: HttpRequest) -> HttpResponse {
+    info!("id: {:?}", &req.path);
+
+    let id = req.path.get("id").unwrap_or("2");
+    info!("id: {}", &id);
+    let user_score = UserScore::get(id).await.unwrap();
+    let mut req = HttpResponse::default();
+    req.set_body(Body::Message(serde_json::to_string(&user_score).unwrap()));
+    req
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_name() {
+        assert!(true);
+    }
 }

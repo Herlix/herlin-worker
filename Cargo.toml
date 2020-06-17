@@ -8,7 +8,7 @@ repository = "https://github.com/Herlix/herlin-worker"
 homepage = "https://github.com/Herlix/herlin-worker"
 license = "MIT/Apache-2.0"
 readme = "README.md"
-keywords = ["web", "rest", "wasm", "rust"]
+keywords = ["web", "rest", "wasm"]
 categories = ["serverless", "cloudflare workers"]
 
 [lib]
@@ -17,35 +17,48 @@ crate-type = ["cdylib", "rlib"]
 [features]
 default = ["console_error_panic_hook"]
 
-[build]
-target = "wasm32-unknown-unknown"
+[workspace]
+members = [
+    ".",
+    "cf_kv",
+    "cf_kv_derive",
+    "herlin_web"
+]
 
 [dependencies]
-cfg-if = "0.1.10"
-wasm-bindgen = { version = "0.2", features=["serde-serialize"] }
-wasm-bindgen-futures = "0.4.10"
-serde_json = "1.0.52"
-serde = { version="1.0.106", features = ["derive"] }
-url = "2.1.1"
-js-sys = "0.3.37"
-async-trait = "0.1.30"
+cf_kv_derive = { path = "cf_kv_derive" }
+cf_kv = { path = "cf_kv" }
+herlin_web = { path = "herlin_web" }
 
-kv_derive = { path = "./kv_derive" }
+cfg-if = "0.1"
+wasm-bindgen = { version="0.2", features = ["serde-serialize"] }
+wasm-bindgen-futures = "0.4"
+serde_json = "1.0"
+serde = { version="1.0", features = ["derive"] }
+url = "2.1"
+js-sys = "0.3"
+async-trait = "0.1"
+console_log = "0.2"
+log = "0.4"
+
+
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
 # all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
 # code size when deploying.
-console_error_panic_hook = { version = "0.1.6", optional = true }
+console_error_panic_hook = { version = "0.1", optional = true }
 
 # `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
 # compared to the default allocator's ~10K. It is slower than the default
 # allocator, however.
-wee_alloc = { version = "0.4.5", optional = true }
+wee_alloc = { version = "0.4", optional = true }
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.10"
-rstest = "0.6.3"
-mockall = "0.7.1"
+wasm-bindgen-test = "0.3"
+rstest = "0.6"
+mockall = "0.7"
+http = "0.2"
+actix-router= "0.2"
 
 [profile.release]
 # Tell `rustc` to optimize for small code size.

@@ -1,0 +1,19 @@
+[package]
+name = "cf_kv_derive"
+version = "0.1.0"
+authors = ["Alexander Herlin <alexander.herlin@outlook.com>"]
+edition = "2018"
+description = "Api worker for personal website"
+repository = "https://github.com/Herlix/herlin-worker"
+homepage = "https://github.com/Herlix/herlin-worker"
+license = "MIT/Apache-2.0"
+readme = "README.md"
+keywords = ["web", "rest", "wasm"]
+categories = ["serverless", "cloudflare workers"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+syn = "1.0"
+quote="1.0"

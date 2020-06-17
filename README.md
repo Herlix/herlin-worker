@@ -24,7 +24,7 @@ Wrangler, Cloudflare CLI:
 ### 🛠️ Build & test
 ```
 /* Build, test non wasm (unit tests), test wasm (integration tests)*/
-cargo build && cargo test && wasm-pack test --node
+cargo build && cargo test --all && wasm-pack test --node
 ```
 
 ### 🔧 Preview with `wrangler preview`

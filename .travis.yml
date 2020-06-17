@@ -5,16 +5,25 @@ cache: cargo
 
 matrix:
   include:
-  # Builds with wasm-pack.
-  - rust: stable
-    env: RUST_BACKTRACE=1
-    addons:
-      firefox: latest
-      chrome: stable
-    before_script:
-      - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
-      - cargo install wrangler
-    script:
-      - cargo test
-      - wasm-pack test --node
-      - wrangler publish
+    - os: linux
+      rust: stable
+      env: RUST_BACKTRACE=1
+
+before_install:
+  - curl -L https://github.com/mozilla/grcov/releases/latest/download/grcov-linux-x86_64.tar.bz2 | tar jxf -
+  - curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -f
+  - cargo install wrangler
+
+script:
+  - export CARGO_INCREMENTAL=0
+  - export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort"
+  - export RUSTDOCFLAGS="-Cpanic=abort"
+  - cargo build --verbose $CARGO_OPTIONS
+  - wasm-pack test --node
+  - cargo test --verbose $CARGO_OPTIONS
+
+after_success: |
+  zip -0 ccov.zip `find . \( -name "herlin_web*.gc*" \) -print`;
+  ./grcov ccov.zip -s . -t lcov --llvm --branch --ignore-not-existing --ignore "/*" -o lcov.info;
+  bash <(curl -s https://codecov.io/bash) -f lcov.info;
+  wrangler publish;

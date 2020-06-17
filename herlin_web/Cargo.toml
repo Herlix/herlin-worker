@@ -1,0 +1,22 @@
+[package]
+name = "herlin_web"
+version = "0.1.0"
+authors = ["Alexander Herlin <alexander.herlin@outlook.com>"]
+edition = "2018"
+description = "Api worker for personal website"
+repository = "https://github.com/Herlix/herlin-worker"
+homepage = "https://github.com/Herlix/herlin-worker"
+license = "MIT/Apache-2.0"
+readme = "README.md"
+keywords = ["web", "rest", "wasm"]
+categories = ["serverless", "cloudflare workers"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde_json = "1.0"
+serde = { version="1.0", features = ["derive"] }
+http = "0.2"
+fxhash = "0.2"
+actix-router= "0.2"
+futures="0.3"

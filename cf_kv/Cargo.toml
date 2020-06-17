@@ -1,0 +1,20 @@
+[package]
+name = "cf_kv"
+version = "0.1.0"
+authors = ["Alexander Herlin <alexander.herlin@outlook.com>"]
+edition = "2018"
+description = "Api worker for personal website"
+repository = "https://github.com/Herlix/herlin-worker"
+homepage = "https://github.com/Herlix/herlin-worker"
+license = "MIT/Apache-2.0"
+readme = "README.md"
+keywords = ["web", "rest", "wasm"]
+categories = ["serverless", "cloudflare workers"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1"
+serde = { version="1.0", features = ["derive"] }
+wasm-bindgen = { version="0.2", features = ["serde-serialize"] }
+wasm-bindgen-futures = "0.4"

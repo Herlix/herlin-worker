@@ -36,13 +36,3 @@ async fn get_user_score(req: HttpRequest) -> HttpResponse {
     req.set_body(Body::Message(serde_json::to_string(&user_score).unwrap()));
     req
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_name() {
-        assert!(true);
-    }
-}

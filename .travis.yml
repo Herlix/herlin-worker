@@ -19,8 +19,9 @@ script:
   - export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort"
   - export RUSTDOCFLAGS="-Cpanic=abort"
   - cargo build --verbose $CARGO_OPTIONS
-  - wasm-pack test --node
   - cargo test --verbose $CARGO_OPTIONS
+  - wasm-pack build
+  - wasm-pack test --node
 
 after_success: |
   zip -0 ccov.zip `find . \( -name "herlin_web*.gc*" \) -print`;

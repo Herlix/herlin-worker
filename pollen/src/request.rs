@@ -2,19 +2,19 @@ use crate::body::Body;
 use actix_router::{Path, Url};
 use http::header::HeaderName;
 use http::{HeaderMap, HeaderValue, Method, Uri};
+use pollen_keyvault::JsValue;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 
-#[macro_export]
-macro_rules! deserialize_request {
-    ($e:expr) => {{
-        let res: Result<herlin_web::request::HttpRequest, wasm_bindgen::JsValue> = $e
+impl From<JsValue> for HttpRequest {
+    fn from(req: JsValue) -> Self {
+        let res: Result<HttpRequest, JsValue> = req
             .into_serde()
             .map_err(|e| JsValue::from_str(e.to_string().as_str()))
-            .map(|e: herlin_web::request::HttpRequestDef| e.into());
-        res
-    }};
+            .map(|e: HttpRequestDef| e.into());
+        res.unwrap()
+    }
 }
 
 #[derive(Debug)]

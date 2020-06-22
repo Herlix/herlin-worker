@@ -5,7 +5,8 @@ use request::HttpRequest;
 use response::HttpResponse;
 use std::future::Future;
 
-extern crate serde;
+pub use pollen_keyvault::{CloudFlareKV, JSError};
+pub use pollen_keyvault_derive::*;
 
 /// All body related logic
 pub mod body;
@@ -13,9 +14,7 @@ pub mod body;
 pub mod errors;
 /// Request related logic
 pub mod request;
-/// Response builders
-pub mod responder;
-/// Reponse related logic
+/// Response related logic
 pub mod response;
 
 struct Route<F>

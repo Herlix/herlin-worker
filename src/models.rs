@@ -1,4 +1,4 @@
-use cf_kv_derive::CloudFlareKV;
+use pollen::CloudFlareKV;
 use serde::{Deserialize, Serialize};
 
 #[derive(CloudFlareKV, Debug, Serialize, Deserialize)]

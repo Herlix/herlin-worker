@@ -3,9 +3,9 @@
 #[cfg(test)]
 mod integration_tests {
     use actix_router::{Path, Url};
-    use herlin_web::deserialize_request;
-    use herlin_web::{body::Body, request::HttpRequest};
     use http::{HeaderMap, HeaderValue, Method, Uri};
+    use pollen::deserialize_request;
+    use pollen::{body::Body, request::HttpRequest};
     use serde::Serialize;
     use std::convert::TryFrom;
     use wasm_bindgen::JsValue;

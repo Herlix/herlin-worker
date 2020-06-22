@@ -20,24 +20,22 @@ default = ["console_error_panic_hook"]
 [workspace]
 members = [
     ".",
-    "cf_kv",
-    "cf_kv_derive",
-    "herlin_web"
+    "pollen/pollen_keyvault_derive",
+    "pollen/pollen_keyvault",
+    "pollen"
 ]
 
 [dependencies]
-cf_kv_derive = { path = "cf_kv_derive" }
-cf_kv = { path = "cf_kv" }
-herlin_web = { path = "herlin_web" }
+pollen = { path = "pollen" }
 
 cfg-if = "0.1"
 wasm-bindgen = { version="0.2", features = ["serde-serialize"] }
 wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+
 serde_json = "1.0"
 serde = { version="1.0", features = ["derive"] }
-url = "2.1"
-js-sys = "0.3"
-async-trait = "0.1"
+
 console_log = "0.2"
 log = "0.4"
 
@@ -55,7 +53,6 @@ wee_alloc = { version = "0.4", optional = true }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"
-rstest = "0.6"
 mockall = "0.7"
 http = "0.2"
 actix-router= "0.2"

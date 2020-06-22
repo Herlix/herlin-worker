@@ -8,6 +8,7 @@ use http::{
     uri::{InvalidUri, InvalidUriParts},
     StatusCode,
 };
+use pollen_keyvault::JSError;
 use std::fmt::{Debug, Display};
 
 /// General purpose error
@@ -175,5 +176,11 @@ impl From<serde_json::error::Error> for ServerError {
 impl Display for ServerError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Inner: {}", self.msg)
+    }
+}
+
+impl From<JSError> for ServerError {
+    fn from(msg: JSError) -> Self {
+        ServerError { msg: msg.msg }
     }
 }

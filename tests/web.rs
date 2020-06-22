@@ -4,7 +4,6 @@
 mod integration_tests {
     use actix_router::{Path, Url};
     use http::{HeaderMap, HeaderValue, Method, Uri};
-    use pollen::deserialize_request;
     use pollen::{body::Body, request::HttpRequest};
     use serde::Serialize;
     use std::convert::TryFrom;
@@ -15,8 +14,8 @@ mod integration_tests {
     #[wasm_bindgen_test]
     async fn deserialize_request_empty() {
         let j = JsValue::from_str("");
-        let m = deserialize_request!(j);
-        assert!(m.is_err())
+        let m = HttpRequest::from_js_value(j);
+        assert!(m.is_err());
     }
 
     #[wasm_bindgen_test]
@@ -51,7 +50,7 @@ mod integration_tests {
         })
         .unwrap();
 
-        let res = deserialize_request!(js_value);
+        let res = HttpRequest::from_js_value(js_value);
         assert_eq!(format!("{:?}", res.unwrap()), format!("{:?}", expected));
     }
 

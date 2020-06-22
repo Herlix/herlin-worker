@@ -14,7 +14,7 @@ use wasm_bindgen::JsValue;
 #[wasm_bindgen]
 pub async fn get_response(request: JsValue) -> Result<JsValue, JsValue> {
     console_log::init_with_level(Level::Debug).expect("Could not init logger");
-    let req = HttpRequest::from(request);
+    let req = HttpRequest::from_js_value(request)?;
 
     let mut app = App::new(req);
     app.reg("userscore", get_user_score);

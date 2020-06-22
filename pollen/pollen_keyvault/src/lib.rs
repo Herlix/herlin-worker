@@ -1,18 +1,10 @@
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+#[warn(missing_debug_implementations, rust_2018_idioms, missing_docs)]
+use serde::{de::DeserializeOwned, Serialize};
 use std::{future::Future, pin::Pin};
 
+pub use js_error::JSError;
 pub use wasm_bindgen::JsValue;
-
-#[derive(Deserialize, Serialize)]
-pub struct JSError {
-    pub msg: String,
-}
-
-impl From<serde_json::Error> for JSError {
-    fn from(e: serde_json::Error) -> Self {
-        JSError { msg: e.to_string() }
-    }
-}
+mod js_error;
 
 pub trait CloudFlareKV {
     fn get<'a>(key: &'a str) -> Pin<Box<dyn Future<Output = Result<Self, JSError>> + 'a>>

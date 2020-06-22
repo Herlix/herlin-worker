@@ -2,20 +2,10 @@ use crate::body::Body;
 use actix_router::{Path, Url};
 use http::header::HeaderName;
 use http::{HeaderMap, HeaderValue, Method, Uri};
-use pollen_keyvault::JsValue;
+use pollen_keyvault::{JSError, JsValue};
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::convert::TryFrom;
-
-impl From<JsValue> for HttpRequest {
-    fn from(req: JsValue) -> Self {
-        let res: Result<HttpRequest, JsValue> = req
-            .into_serde()
-            .map_err(|e| JsValue::from_str(e.to_string().as_str()))
-            .map(|e: HttpRequestDef| e.into());
-        res.unwrap()
-    }
-}
 
 #[derive(Debug)]
 pub struct HttpRequest {
@@ -23,6 +13,14 @@ pub struct HttpRequest {
     pub headers: HeaderMap,
     pub path: Path<Url>,
     pub body: Body,
+}
+
+impl HttpRequest {
+    pub fn from_js_value(req: JsValue) -> Result<Self, JSError> {
+        req.into_serde()
+            .map_err(|e| JSError { msg: e.to_string() })
+            .map(|e: HttpRequestDef| e.into())
+    }
 }
 
 #[derive(Debug)]

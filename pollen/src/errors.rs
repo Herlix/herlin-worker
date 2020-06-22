@@ -179,8 +179,17 @@ impl Display for ServerError {
     }
 }
 
-impl From<JSError> for ServerError {
-    fn from(msg: JSError) -> Self {
-        ServerError { msg: msg.msg }
+impl ResponseError for JSError {
+    fn status_code(&self) -> StatusCode {
+        StatusCode::BAD_REQUEST
+    }
+    fn error_response(&self) -> HttpResponse {
+        let mut resp = HttpResponse::new(self.status_code());
+        resp.headers_mut().insert(
+            http::header::CONTENT_TYPE,
+            http::HeaderValue::from_static("text/plain; charset=utf-8"),
+        );
+        resp.set_body(Body::Message("Invalid JSON-structure".to_string()));
+        resp
     }
 }

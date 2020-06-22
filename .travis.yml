@@ -24,7 +24,7 @@ script:
   - wasm-pack test --node
 
 after_success: |
-  zip -0 ccov.zip `find . \( -name "pollen*.gc*" \) -print`;
+  zip -0 ccov.zip `find . \( -name "**.gc*" \) -print`;
   ./grcov ccov.zip -s ./pollen/ -t lcov --llvm --branch --ignore-not-existing --ignore "/*" -o lcov.info;
   bash <(curl -s https://codecov.io/bash) -f lcov.info;
   wrangler publish;
